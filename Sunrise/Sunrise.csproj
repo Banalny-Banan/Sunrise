@@ -129,7 +129,8 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="EntryPoint\SunriseLoader.cs"/>
+    <Compile Include="EntryPoint\SunriseLoader.cs" />
+    <Compile Include="Events\RotationReceivedPatch.cs" />
         <Compile Include="Features\AntiWallhack\FpcVisibilityControllerIgnoredFlagsPatch.cs" />
         <Compile Include="Features\DoorInteractionValidation\DoorInteractionValidationModule.cs" />
         <Compile Include="Features\AntiWallhack\AntiWallhackModule.cs" />
@@ -141,13 +142,15 @@
         <Compile Include="Features\CommonPatches\Scp939LungePatch.cs" />
         <Compile Include="Features\ServersideBacktrack\EntryMatchFlags.cs" />
         <Compile Include="Features\AntiWallhack\FpcVisibilityControllerPatch.cs" />
+    <Compile Include="Features\ServersideBacktrack\RelativeRotation.cs" />
+    <Compile Include="Features\ServersideBacktrack\ShotMessagePatch.cs" />
         <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaDamageModule.cs" />
         <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaHitreg.cs" />
         <Compile Include="Utility\Colors.cs" />
         <Compile Include="Utility\Debug.cs" />
         <Compile Include="Utility\Layers.cs" />
         <Compile Include="Utility\MathExtensions.cs" />
-        <Compile Include="Utility\PlayerExtensions.cs" />
+    <Compile Include="Utility\QuaternionExtensions.cs" />
         <Compile Include="Utility\PluginModule.cs" />
         <Compile Include="EntryPoint\Config.cs" />
         <Compile Include="EntryPoint\SunrisePlugin.cs" />

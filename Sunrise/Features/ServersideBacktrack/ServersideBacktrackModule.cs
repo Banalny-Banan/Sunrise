@@ -1,3 +1,6 @@
+using Sunrise.Events;
+using Sunrise.Utility;
+
 namespace Sunrise.Features.ServersideBacktrack;
 
 /// <summary>
@@ -8,17 +11,20 @@ namespace Sunrise.Features.ServersideBacktrack;
 public class ServersideBacktrackModule : PluginModule
 {
     public static readonly Dictionary<Player, BacktrackHistory> BacktrackHistories = new();
+    public static readonly Dictionary<Player, RelativeRotation> LastClientsRotation = new Dictionary<Player, RelativeRotation>();
 
     protected override void OnEnabled()
     {
         StaticUnityMethods.OnUpdate += OnUpdate;
         Handlers.Server.ReloadedConfigs += OnReset;
+        RotationReceivedPatch.OnRotationReceived += OnRotationReceived;
     }
 
     protected override void OnDisabled()
     {
         StaticUnityMethods.OnUpdate -= OnUpdate;
         Handlers.Server.ReloadedConfigs -= OnReset;
+        RotationReceivedPatch.OnRotationReceived -= OnRotationReceived;
     }
 
     protected override void OnReset()
@@ -36,5 +42,13 @@ public class ServersideBacktrackModule : PluginModule
             BacktrackHistory history = BacktrackHistories.GetOrAdd(player, () => new(player));
             history.RecordEntry();
         }
+    }
+
+    void OnRotationReceived(RotationReceivedPatch.EventArgs ev)
+    {
+        if (!Player.TryGet(ev.Instance?._hub, out var player) || player.GameObject == null)
+            return;
+
+        LastClientsRotation[player] = new RelativeRotation(ev.CurrentRelativeRotation, ev.WaypointId);
     }
 }
