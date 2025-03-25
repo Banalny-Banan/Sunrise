@@ -15,18 +15,20 @@ public static class PickupValidator
 
     public static void OnPickingUpItem(PickingUpItemEventArgs ev)
     {
-        if (!Config.Instance.PickupValidation || !ev.Pickup.Base || ev.Player.Role is FpcRole { IsNoclipEnabled: true })
-            return;
+        // No longer needed
 
-        if (TemporaryPlayerBypass.TryGetValue(ev.Player, out float time) && time > Time.time)
-            return;
+        //if (!Config.Instance.PickupValidation || !ev.Pickup.Base || ev.Player.Role is FpcRole { IsNoclipEnabled: true })
+        //    return;
 
-        // Exiled bug - armor pickups become permanently locked if the event is denied
-        if (ev.Pickup is BodyArmorPickup)
-            return;
+        //if (TemporaryPlayerBypass.TryGetValue(ev.Player, out float time) && time > Time.time)
+        //    return;
 
-        if (!CanPickUp(ev.Player, ev.Pickup))
-            ev.IsAllowed = false;
+        //// Exiled bug - armor pickups become permanently locked if the event is denied
+        //if (ev.Pickup is BodyArmorPickup)
+        //    return;
+
+        //if (!CanPickUp(ev.Player, ev.Pickup))
+        //    ev.IsAllowed = false;
     }
 
     static bool CanPickUp(Player player, Pickup pickup)

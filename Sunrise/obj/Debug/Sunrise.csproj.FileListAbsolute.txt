@@ -1,0 +1,2 @@
+C:\Users\utege\Source\Repos\Sunrise\Sunrise\obj\Debug\Sunrise.csproj.AssemblyReference.cache
+C:\Users\utege\Source\Repos\Sunrise\Sunrise\obj\Debug\Sunrise.csproj.CoreCompileInputs.cache
