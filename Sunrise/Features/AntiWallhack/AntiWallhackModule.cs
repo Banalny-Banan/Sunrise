@@ -1,5 +1,6 @@
 using System;
 using MapGeneration;
+using Sunrise.API.Visibility;
 
 namespace Sunrise.Features.AntiWallhack;
 
@@ -8,7 +9,7 @@ namespace Sunrise.Features.AntiWallhack;
 ///     Works by only sending data about players in rooms that can be seen from the room the observer is currently in.
 ///     Reduces wallhack effective distance to around 12m (from 36m in base game)
 /// </summary>
-public class AntiWallhackModule : PluginModule
+internal class AntiWallhackModule : PluginModule
 {
     protected override void OnEnabled()
     {
@@ -28,7 +29,7 @@ public class AntiWallhackModule : PluginModule
             {
                 try
                 {
-                    RoomVisibilityData.Get(RoomIdUtils.PositionToCoords(room.Position));
+                    VisibilityData.Get(room);
                 }
                 catch (Exception e)
                 {

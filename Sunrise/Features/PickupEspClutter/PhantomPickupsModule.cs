@@ -1,9 +1,9 @@
+using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
-using PlayerRoles.FirstPersonControl;
 
 namespace Sunrise.Features.PickupEspClutter;
 
-public class PhantomPickupsModule : PluginModule
+internal class PhantomPickupsModule : PluginModule
 {
     public static readonly List<ItemType> PhantomItemTypes =
     [
@@ -16,19 +16,21 @@ public class PhantomPickupsModule : PluginModule
 
     protected override void OnEnabled()
     {
-        // BUG: Triggers collide with players pushing them off the map
-
-        /*if (!Config.Instance.PhantomPickups)
-            return;
-
         Handlers.Server.RoundStarted += OnRoundStarted;
-        Handlers.Server.RoundEnded += OnRoundEnded;*/
+        Handlers.Server.RoundEnded += OnRoundEnded;
+        Handlers.Player.PickingUpItem += OnPickingUpItem;
     }
 
     protected override void OnDisabled()
     {
         Handlers.Server.RoundStarted -= OnRoundStarted;
         Handlers.Server.RoundEnded -= OnRoundEnded;
+        Handlers.Player.PickingUpItem -= OnPickingUpItem;
+    }
+
+    protected override void OnReset()
+    {
+        PhantomPickup.Pickups.Clear();
     }
 
     static void OnRoundStarted()
@@ -39,5 +41,11 @@ public class PhantomPickupsModule : PluginModule
     static void OnRoundEnded(RoundEndedEventArgs ev)
     {
         PhantomItemSpawner.Stop();
+    }
+
+    static void OnPickingUpItem(PickingUpItemEventArgs ev)
+    {
+        if (PhantomPickup.Pickups.Contains(ev.Pickup))
+            ev.IsAllowed = false;
     }
 }

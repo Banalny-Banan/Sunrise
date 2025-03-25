@@ -5,7 +5,7 @@ using PlayerRoles.FirstPersonControl;
 namespace Sunrise.Features.ServersideBacktrack;
 
 [HarmonyPatch(typeof(FpcMouseLook), nameof(FpcMouseLook.ApplySyncValues))] [UsedImplicitly]
-public static class FpcMouseLookPatch
+internal static class FpcMouseLookPatch
 {
     [UsedImplicitly]
     static void Prefix(ushort horizontal, ushort vertical, FpcMouseLook __instance)
@@ -14,7 +14,7 @@ public static class FpcMouseLookPatch
         BacktrackHistory.Get(__instance._hub).RecordEntry(__instance._hub.transform.position, curRotation);
     }
 
-    public static Quaternion ConvertToQuaternion(ushort horizontal, ushort vertical)
+    static Quaternion ConvertToQuaternion(ushort horizontal, ushort vertical)
     {
         const float ushortToFloat = 1f / ushort.MaxValue;
 

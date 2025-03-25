@@ -1,6 +1,3 @@
-using Exiled.API.Features.Roles;
-using PlayerRoles.FirstPersonControl;
-
 namespace Sunrise.Features.ServersideBacktrack;
 
 /// <summary>

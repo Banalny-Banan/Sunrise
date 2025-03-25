@@ -2,9 +2,12 @@ using MEC;
 
 namespace Sunrise.Features.ServersideTeslaDamage;
 
-public class ServersideTeslaHitreg(TeslaGate tesla)
+internal class ServersideTeslaHitreg(TeslaGate tesla)
 {
-    public const float ShockDuration = 0.5f;
+    const float ShockDuration = 0.5f;
+
+    internal static readonly Dictionary<TeslaGate, ServersideTeslaHitreg> Dictionary = new();
+    internal static readonly Dictionary<Player, float> ShockedPlayers = new();
 
     readonly Bounds _bounds = new(tesla.transform.position + Vector3.up * (tesla.sizeOfKiller.y / 2f), tesla.transform.rotation * new Vector3(4f, 0.7f, 5f));
     readonly Collider[] _hitBuffer = new Collider[32];
@@ -42,9 +45,7 @@ public class ServersideTeslaHitreg(TeslaGate tesla)
             Collider collider = _hitBuffer[i];
 
             if (Player.Get(collider) is Player player)
-            {
                 _hitPlayers.Add(player);
-            }
         }
     }
 
@@ -56,12 +57,14 @@ public class ServersideTeslaHitreg(TeslaGate tesla)
                 continue;
 
             // If the player have reported the damage themselves we don't want to deal it twice
-            if (ServersideTeslaDamageModule.ShockedPlayers.TryGetValue(player, out float shockTime) && Time.time - shockTime < ShockDuration)
+            if (ShockedPlayers.TryGetValue(player, out float shockTime) && Time.time - shockTime < ShockDuration)
                 return;
-            
+
             TeslaGateController.ServerReceiveMessage(player.Connection, new(tesla));
         }
 
         _hitPlayers.Clear();
     }
+    
+    internal static ServersideTeslaHitreg Get(TeslaGate tesla) => Dictionary.GetOrAdd(tesla, () => new(tesla));
 }

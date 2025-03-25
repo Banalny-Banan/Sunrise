@@ -7,13 +7,13 @@ using MapGeneration.Distributors;
 
 namespace Sunrise.Features.PickupValidation;
 
-public static class PickupValidator
+internal static class PickupValidator
 {
     internal static readonly Dictionary<Player, float> TemporaryPlayerBypass = new();
     internal static readonly Dictionary<LockerChamber, float> LockerLastInteraction = new();
     internal static readonly Dictionary<DoorVariant, float> DoorLastInteraction = new();
 
-    public static void OnPickingUpItem(PickingUpItemEventArgs ev)
+    internal static void OnPickingUpItem(PickingUpItemEventArgs ev)
     {
         // No longer needed
 

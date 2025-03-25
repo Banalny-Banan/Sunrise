@@ -8,11 +8,8 @@ namespace Sunrise.Features.ServersideTeslaDamage;
 ///     Makes tesla gates deal damage on server side after a short delay to account for latency.
 ///     In base game, clients are expected to report themselves getting damaged, which cheaters can exploit.
 /// </summary>
-public class ServersideTeslaDamageModule : PluginModule
+internal class ServersideTeslaDamageModule : PluginModule
 {
-    public static readonly Dictionary<TeslaGate, ServersideTeslaHitreg> TeslaHitreg = new();
-    public static readonly Dictionary<Player, float> ShockedPlayers = new();
-
     protected override void OnEnabled()
     {
         TeslaGate.OnBursted += OnTeslaGateBursted;
@@ -25,6 +22,12 @@ public class ServersideTeslaDamageModule : PluginModule
         Handlers.Player.Hurt -= OnPlayerHurt;
     }
 
+    protected override void OnReset()
+    {
+        ServersideTeslaHitreg.Dictionary.Clear();
+        ServersideTeslaHitreg.ShockedPlayers.Clear();
+    }
+
     static void OnTeslaGateBursted(TeslaGate tesla)
     {
         if (!Config.Instance.ServersideTeslaDamage)
@@ -32,8 +35,7 @@ public class ServersideTeslaDamageModule : PluginModule
 
         try
         {
-            ServersideTeslaHitreg serversideTeslaHitreg = TeslaHitreg.GetOrAdd(tesla, () => new(tesla));
-            serversideTeslaHitreg.Burst();
+            ServersideTeslaHitreg.Get(tesla).Burst();
         }
         catch (Exception e)
         {
@@ -43,7 +45,6 @@ public class ServersideTeslaDamageModule : PluginModule
 
     static void OnPlayerHurt(HurtEventArgs ev)
     {
-        if (ev.DamageHandler.Type == DamageType.Tesla)
-            ShockedPlayers[ev.Player] = Time.time;
+        if (ev.DamageHandler.Type == DamageType.Tesla) ServersideTeslaHitreg.ShockedPlayers[ev.Player] = Time.time;
     }
 }

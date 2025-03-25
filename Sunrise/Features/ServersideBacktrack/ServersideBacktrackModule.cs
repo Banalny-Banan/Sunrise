@@ -5,7 +5,7 @@ namespace Sunrise.Features.ServersideBacktrack;
 ///     When a player shoots, the server finds the best values from the history instead of blindly trusting the client over their position and rotation values.
 ///     This prevents any cheats that include shooting in a different direction than the actual one.
 /// </summary>
-public class ServersideBacktrackModule : PluginModule
+internal class ServersideBacktrackModule : PluginModule
 {
     protected override void OnEnabled()
     {

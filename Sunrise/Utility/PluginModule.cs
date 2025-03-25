@@ -2,7 +2,7 @@ namespace Sunrise.Utility;
 
 public abstract class PluginModule
 {
-    public virtual List<PluginModule> SubModules { get; } = [];
+    protected virtual List<PluginModule> SubModules { get; } = [];
 
     public bool IsEnabled { get; private set; }
 

@@ -6,7 +6,7 @@ using PlayerRoles.FirstPersonControl;
 namespace Sunrise.Features.AntiWallhack;
 
 [HarmonyPatch(typeof(FpcVisibilityController), nameof(FpcVisibilityController.IgnoredFlags), MethodType.Getter)] [UsedImplicitly]
-public static class FpcVisibilityControllerIgnoredFlagsPatch
+internal static class FpcVisibilityControllerIgnoredFlagsPatch
 {
     [UsedImplicitly]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

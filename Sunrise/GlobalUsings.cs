@@ -9,5 +9,4 @@ global using static HarmonyLib.AccessTools;
 global using Debug = Sunrise.Utility.Debug;
 global using Handlers = Exiled.Events.Handlers;
 global using Log = Exiled.API.Features.Log;
-global using Object = UnityEngine.Object;
 global using Random = UnityEngine.Random;

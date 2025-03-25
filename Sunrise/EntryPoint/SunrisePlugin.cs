@@ -16,11 +16,9 @@ public class SunrisePlugin : Plugin<Config>
 
     public SunriseLoader Loader { get; } = new();
     public Harmony Harmony { get; } = new("Sunrise");
-    public static SunrisePlugin Instance { get; private set; } = null!;
 
     public override void OnEnabled()
     {
-        Instance = this;
         Loader.Enable();
         Harmony.PatchAll();
         base.OnEnabled();

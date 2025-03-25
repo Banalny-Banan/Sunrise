@@ -5,10 +5,10 @@ using MEC;
 
 namespace Sunrise.Utility;
 
-public static class Debug
+internal static class Debug
 {
     [Conditional("DEBUG")]
-    public static void DrawCube(Vector3 position, Vector3 scale, Color color = default, float duration = 10f)
+    internal static void DrawCube(Vector3 position, Vector3 scale, Color color = default, float duration = 10f)
     {
         if (!Config.Instance.DebugPrimitives)
             return;
@@ -20,7 +20,7 @@ public static class Debug
     }
 
     [Conditional("DEBUG")]
-    public static void DrawLine(Vector3 start, Vector3 end, Color color = default, float duration = 10f)
+    internal static void DrawLine(Vector3 start, Vector3 end, Color color = default, float duration = 10f)
     {
         if (!Config.Instance.DebugPrimitives)
             return;
@@ -33,7 +33,7 @@ public static class Debug
     }
 
     [Conditional("DEBUG")]
-    public static void DrawPoint(Vector3 position, Color color = default, float duration = 10f)
+    internal static void DrawPoint(Vector3 position, Color color = default, float duration = 10f)
     {
         if (!Config.Instance.DebugPrimitives)
             return;
@@ -44,7 +44,13 @@ public static class Debug
         Timing.CallDelayed(duration, point.Destroy);
     }
 
-    public static void GetLineData(Vector3 from, Vector3 to, float thickness, bool cube, out Vector3 position, out Vector3 scale, out Quaternion rotation)
+    [Conditional("DEBUG")]
+    internal static void Log(string s)
+    {
+        Exiled.API.Features.Log.Debug(s);
+    }
+
+    static void GetLineData(Vector3 from, Vector3 to, float thickness, bool cube, out Vector3 position, out Vector3 scale, out Quaternion rotation)
     {
         Vector3 direction = to - from;
         float distance = direction.magnitude;
@@ -62,11 +68,5 @@ public static class Debug
             color.a = 0.1f;
 
         return color;
-    }
-
-    [Conditional("DEBUG")]
-    public static void Log(string s)
-    {
-        Exiled.API.Features.Log.Debug(s);
     }
 }

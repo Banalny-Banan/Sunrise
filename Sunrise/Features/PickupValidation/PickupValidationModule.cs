@@ -3,7 +3,7 @@ using Exiled.Events.EventArgs.Scp914;
 
 namespace Sunrise.Features.PickupValidation;
 
-public class PickupValidationModule : PluginModule
+internal class PickupValidationModule : PluginModule
 {
     protected override void OnEnabled()
     {

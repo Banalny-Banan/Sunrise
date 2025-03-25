@@ -10,14 +10,14 @@ using BaseFirearm = InventorySystem.Items.Firearms.Firearm;
 namespace Sunrise.Features.ServersideBacktrack;
 
 [HarmonyPatch(typeof(ShotBacktrackData), nameof(ShotBacktrackData.ProcessShot))] [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-public static class BacktrackOverridePatch
+internal static class BacktrackOverridePatch
 {
     static Stopwatch sw = new();
     static double totalElapsed = 0;
     static int count = 0;
     static bool first = true;
 
-    public static bool Prefix(BaseFirearm firearm, Action<ReferenceHub> processingMethod, ShotBacktrackData __instance)
+    static bool Prefix(BaseFirearm firearm, Action<ReferenceHub> processingMethod, ShotBacktrackData __instance)
     {
         if (!Config.Instance.ServersideBacktrack)
             return true;

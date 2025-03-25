@@ -1,149 +1,101 @@
-using System;
-using Exiled.API.Enums;
 using Exiled.API.Features.Pickups;
-using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;
 using MEC;
 using Mirror;
 using NorthwoodLib.Pools;
-using PlayerRoles.FirstPersonControl;
+using Sunrise.API.Visibility;
 
 namespace Sunrise.Features.PickupEspClutter;
 
-public class PhantomItem : MonoBehaviour
+internal class PhantomPickup : MonoBehaviour
 {
-    [UsedImplicitly] public static float VisibilityDistanceMultiplier = 1f;
+    [UsedImplicitly] public static bool DebugMode;
 
-    readonly HashSet<Player> _affectedPlayers = HashSetPool<Player>.Shared.Rent(30);
-    ObjectDestroyMessage _destroyMessage;
-    LinkedListNode<PhantomItem> _node = null!;
-    float _visibilityDistance;
+    readonly HashSet<Player> _hiddenFor = HashSetPool<Player>.Shared.Rent();
+    NetworkIdentity _netIdentity = null!;
 
-    public static LinkedList<PhantomItem> List { get; } = [];
+    LinkedListNode<PhantomPickup> _node = null!;
+    Pickup _pickup = null!;
+
+    internal static LinkedList<PhantomPickup> List { get; } = [];
+    internal static HashSet<Pickup> Pickups { get; } = [];
+
+    void Start()
+    {
+        _node = List.AddLast(this);
+        _pickup = Pickup.Get(gameObject);
+        _netIdentity = _pickup.Base.netIdentity;
+
+        Pickups.Add(_pickup);
+
+        Timing.RunCoroutine(Coroutine());
+    }
 
     void OnDestroy()
     {
-        foreach (Player player in _affectedPlayers)
-        {
-            if (player.IsConnected)
-                player.Connection.Send(_destroyMessage);
-        }
-
         List.Remove(_node);
-        HashSetPool<Player>.Shared.Return(_affectedPlayers);
+        _pickup.Destroy();
+        HashSetPool<Player>.Shared.Return(_hiddenFor);
     }
 
-    void OnTriggerEnter(Collider other)
+    public void Destroy()
     {
-        if (Player.Get(other) is Player player)
+        _pickup.Destroy();
+    }
+
+    IEnumerator<float> Coroutine()
+    {
+        while (true)
         {
-            DestroyFor(player);
+            // Choose a new position for the item
+            PhantomPickupSynchronizer.GetNextPosition(out Vector3 position, out VisibilityData roomVisibilityData);
+            _pickup.Position = position;
+
+            // Wait for the item to change position to one where it wont be noticed by legit players immediately, so we can safely update visibility
+            yield return Timing.WaitForSeconds(Random.Range(0.2f, 0.3f));
+
+            // Update visibility for all players
+            foreach (Player player in Player.List)
+                SetVisibility(player, !IsObserving(roomVisibilityData, player));
+
+            // Lay on the ground for some time
+            yield return Timing.WaitForSeconds(Random.Range(1f, 2f));
         }
     }
 
-    IEnumerator<float> Initialize(Pickup pickup)
+    void SetVisibility(Player player, bool visibility)
     {
-        yield return Timing.WaitForOneFrame;
-
-        const float VisibilityDistanceSurface = 70f;
-        const float VisibilityDistanceFacility = 36f;
-
-        _destroyMessage = new ObjectDestroyMessage { netId = pickup.Base.netIdentity.netId };
-        _visibilityDistance = (pickup.Room is { Type: RoomType.Surface } ? VisibilityDistanceSurface : VisibilityDistanceFacility) * VisibilityDistanceMultiplier;
-
-        gameObject.layer = (int)Layer.Trigger;
-        var trigger = gameObject.AddComponent<SphereCollider>();
-        trigger.isTrigger = true;
-        trigger.radius = _visibilityDistance;
-        
-        _affectedPlayers.UnionWith(Player.Dictionary.Values);
-        _affectedPlayers.Remove(Server.Host);
-
-        PhantomDestroy(pickup.Base.netIdentity);
-        DestroyInProximity();
-
-        _node = List.AddLast(this);
-    }
-
-    void DestroyInProximity()
-    {
-        foreach (Player player in _affectedPlayers)
+        switch (visibility)
         {
-            if (MathExtensions.SqrDistance(player.Position, transform.position) < _visibilityDistance)
-                DestroyFor(player);
+            case true when _hiddenFor.Remove(player):
+                NetworkServer.ShowForConnection(_netIdentity, player.Connection);
+                break;
+            case false when _hiddenFor.Add(player):
+                NetworkServer.HideForConnection(_netIdentity, player.Connection);
+                break;
         }
     }
 
-    void DestroyFor(Player player)
+    // Whether the player will be able to see the item
+    static bool IsObserving(VisibilityData visibilityData, Player player)
     {
-        if (_affectedPlayers.Remove(player))
-            player.Connection.Send(_destroyMessage);
+        if (DebugMode)
+            return MathExtensions.SqrDistance(player.Position, visibilityData.Room.Position) < 1.5f * 1.5f;
+
+        return visibilityData.IsVisible(player);
     }
 
-    public static void PhantomDestroy(NetworkIdentity identity)
-    {
-        if (NetworkServer.active)
-        {
-            if ((bool)(Object)NetworkServer.aoi)
-            {
-                try
-                {
-                    NetworkServer.aoi.OnDestroyed(identity);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                }
-            }
-        }
-
-        NetworkServer.spawned.Remove(identity.netId);
-        identity.connectionToClient?.RemoveOwnedObject(identity);
-
-        /*NetworkServer.SendToObservers<ObjectDestroyMessage>(identity, new ObjectDestroyMessage()
-        {
-            netId = identity.netId,
-        });*/
-        identity.ClearObservers();
-
-        if (NetworkClient.active && NetworkServer.activeHost)
-        {
-            if (identity.isLocalPlayer)
-                identity.OnStopLocalPlayer();
-            identity.OnStopClient();
-            identity.isOwned = false;
-            identity.NotifyAuthority();
-            NetworkClient.connection.owned.Remove(identity);
-            NetworkClient.spawned.Remove(identity.netId);
-        }
-
-        identity.OnStopServer();
-        identity.destroyCalled = true;
-
-        if (Application.isPlaying)
-            Destroy(identity.gameObject);
-    }
-
-    public static void DestroyOldest()
+    internal static void DestroyOldest()
     {
         if (List.Count > 0)
-            Destroy(List.First.Value);
+            List.First.Value.Destroy();
     }
 
-    public static void SpawnNew(Room room)
+    internal static void Create()
     {
-        const float RandomOffset = 5f;
-        Vector3 position = room.Position + (Random.insideUnitSphere * RandomOffset) with { y = Random.Range(1f, 5f) };
-        ItemType itemType = PhantomPickupsModule.PhantomItemTypes.RandomItem();
-
-        Create(itemType, position);
-    }
-
-    public static void Create(ItemType type, Vector3 position)
-    {
+        PhantomPickupSynchronizer.GetNextPosition(out Vector3 position, out _);
+        ItemType type = PhantomPickupsModule.PhantomItemTypes.RandomItem();
         var pickup = Pickup.CreateAndSpawn(type, position, Random.rotation);
-        var gameObject = new GameObject($"PhantomItem-{type}");
-        gameObject.transform.position = position;
-        gameObject.AddComponent<PhantomItem>().Initialize(pickup).RunCoroutine();
+        pickup.GameObject.AddComponent<PhantomPickup>();
     }
 }

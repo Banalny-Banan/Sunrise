@@ -9,7 +9,7 @@ namespace Sunrise.EntryPoint;
 
 public class SunriseLoader : PluginModule
 {
-    public override List<PluginModule> SubModules { get; } =
+    protected override List<PluginModule> SubModules { get; } =
     [
         new AntiWallhackModule(),
         new PickupValidationModule(),

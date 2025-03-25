@@ -10,9 +10,9 @@ public class BacktrackHistory(Player player)
     public const float AcceptedDistance = 0.02f;
     public const float AcceptedAngle = 0.1f;
 
-    public static readonly Dictionary<ReferenceHub, BacktrackHistory> Dictionary = new();
+    internal static readonly Dictionary<ReferenceHub, BacktrackHistory> Dictionary = new();
 
-    public readonly CircularBuffer<BacktrackEntry> Entries = new((int)(Config.Instance.AccountedLatencySeconds * 60));
+    internal readonly CircularBuffer<BacktrackEntry> Entries = new((int)(Config.Instance.AccountedLatencySeconds * 60));
 
     public void RecordEntry(Vector3 position, Quaternion rotation)
     {
@@ -23,7 +23,7 @@ public class BacktrackHistory(Player player)
     ///     When players move quickly, their position history may not contain the latest data because of latency.
     ///     This method forecasts the player's position to account for this.
     /// </summary>
-    public void ForecastEntry()
+    void ForecastEntry()
     {
         float speed = player.Velocity.magnitude;
         Vector3 direction = player.Velocity / speed;

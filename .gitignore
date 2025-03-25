@@ -1,3 +1,18 @@
-".vs/" 
-"Sunrise/.vs/" 
-"Sunrise/obj/" 
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Other
+/Sunrise/obj/
+/Sunrise/bin/
+/Sunrise.sln.DotSettings.user
+/git-filter-repo
