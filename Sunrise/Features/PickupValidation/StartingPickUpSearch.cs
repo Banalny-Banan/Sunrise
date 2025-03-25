@@ -2,6 +2,7 @@
 using System.Reflection.Emit;
 using Exiled.API.Features.Pickups;
 using HarmonyLib;
+using InventorySystem.Items.Pickups;
 using InventorySystem.Searching;
 using JetBrains.Annotations;
 using NorthwoodLib.Pools;
@@ -24,8 +25,6 @@ internal class StartingPickUpSearch
         int offset = 1;
         int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Isinst && x.operand is Type type && type == typeof(InventorySystem.Items.ICustomSearchCompletorItem)) + offset;
 
-        LocalBuilder ev = generator.DeclareLocal(typeof(PickUpSearchEventArgs));
-
         newInstructions.InsertRange(index, 
         [
             new(OpCodes.Ldarg_0), // referenceHub
@@ -33,14 +32,8 @@ internal class StartingPickUpSearch
 
             new(OpCodes.Ldarg_1), // itemPickupBase
 
-            new(OpCodes.Newobj, GetDeclaredConstructors(typeof(PickUpSearchEventArgs))[0]), // PickUpSearchEventArgs ev = new(player, itemPickupBase)
-            new(OpCodes.Stloc_S, ev.LocalIndex),
-            
-            new(OpCodes.Ldloc_S, ev.LocalIndex),
             new(OpCodes.Call, Method(typeof(StartingPickUpSearch), nameof(OnSearchingPickUp))), // StartingPickUpSearch.OnSearchingPickUp(ev)
-            
-            new(OpCodes.Ldloc_S, ev.LocalIndex),
-            new(OpCodes.Callvirt, PropertyGetter(typeof(PickUpSearchEventArgs), nameof(PickUpSearchEventArgs.IsAllowed))),
+
             new(OpCodes.Brfalse_S, ret), // if (!ev.IsAllowed) return;
         ]);
 
@@ -50,25 +43,25 @@ internal class StartingPickUpSearch
         ListPool<CodeInstruction>.Shared.Return(newInstructions);
     }
 
-    public static void OnSearchingPickUp(PickUpSearchEventArgs ev)
+    public static bool OnSearchingPickUp(Player player, ItemPickupBase itemPickupBase)
     {
         if (!Config.Instance.PickupValidation)
-            return;
+            return true;
 
-        if (PickupValidator.TemporaryPlayerBypass.TryGetValue(ev.Player, out float time) && time > Time.time)
-            return;
+        if (PickupValidator.TemporaryPlayerBypass.TryGetValue(player, out float time) && time > Time.time)
+            return true;
 
-        BacktrackEntry history = BacktrackHistory.Get(ev.Player).Entries.Front();
+        BacktrackEntry history = BacktrackHistory.Get(player).Entries.Front();
 
-        if (TryGetOldRaycast(history, ev.Player.CameraTransform.position, out RaycastHit hit))
+        if (TryGetOldRaycast(history, player.CameraTransform.position, out RaycastHit hit))
         {
             Debug.DrawLine(history.Position, hit.point);
 
-            if (Pickup.Get(hit.transform.gameObject).Base == ev.ItemPickupBase)
-                return;
+            if (Pickup.Get(hit.transform.gameObject).Base == itemPickupBase)
+                return true;
         }
 
-        ev.IsAllowed = false;
+        return false;
     }
 
     internal static bool TryGetOldRaycast(BacktrackEntry backtrack, Vector3 cameraPosition, out RaycastHit raycastHit)
