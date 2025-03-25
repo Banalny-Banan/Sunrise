@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+          Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,11 +10,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sunrise</RootNamespace>
     <AssemblyName>Sunrise</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,48 +38,35 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
-            copy /y "$(SolutionDir)$(AssemblyName)\$(OutputPath)$(AssemblyName).dll" "$(AppData)\EXILED\Plugins\$(AssemblyName).dll"
-        </PostBuildEvent>
+      copy /y "$(SolutionDir)$(AssemblyName)\$(OutputPath)$(AssemblyName).dll" "$(AppData)\EXILED\Plugins\$(AssemblyName).dll"
+    </PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\ExMod-9.0.0\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandSystem.Core">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\CommandSystem.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Exiled.CreditTags">
       <HintPath>..\_ProjectDependencies\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="NorthwoodLib">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="PluginAPI">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\PluginAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="Pooling">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\Pooling.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Exiled.API" HintPath="..\_ProjectDependencies\Exiled.API.dll" />
-    <Reference Include="Exiled.Events" HintPath="..\_ProjectDependencies\Exiled.Events.dll" />
-    <Reference Include="Exiled.Loader" HintPath="..\_ProjectDependencies\Exiled.Loader.dll" />
-    <Reference Include="Exiled.Permissions" HintPath="..\_ProjectDependencies\Exiled.Permissions.dll" />
-    <Reference Include="mscorlib" HintPath="..\_ProjectDependencies\mscorlib.dll" />
-    <Reference Include="Assembly-CSharp" HintPath="..\_ProjectDependencies\Assembly-CSharp-Publicized.dll" />
-    <Reference Include="Assembly-CSharp-firstpass" HintPath="..\_ProjectDependencies\Assembly-CSharp-firstpass.dll" />
-    <Reference Include="Mirror" HintPath="..\_ProjectDependencies\Mirror-Publicized.dll" />
-    <Reference Include="System" HintPath="..\_ProjectDependencies\System.dll" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
+    <Reference Include="System"/>
+    <Reference Include="System.Core"/>
+    <Reference Include="Exiled.API" HintPath="..\_ProjectDependencies\Exiled.API.dll"/>
+    <Reference Include="Exiled.Events" HintPath="..\_ProjectDependencies\Exiled.Events.dll"/>
+    <Reference Include="Exiled.Loader" HintPath="..\_ProjectDependencies\Exiled.Loader.dll"/>
+    <Reference Include="Exiled.Permissions" HintPath="..\_ProjectDependencies\Exiled.Permissions.dll"/>
+    <Reference Include="mscorlib" HintPath="..\_ProjectDependencies\mscorlib.dll"/>
+    <Reference Include="Assembly-CSharp" HintPath="..\_ProjectDependencies\Assembly-CSharp-Publicized.dll"/>
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="..\_ProjectDependencies\Assembly-CSharp-firstpass.dll"/>
+    <Reference Include="Mirror" HintPath="..\_ProjectDependencies\Mirror-Publicized.dll"/>
+    <Reference Include="System" HintPath="..\_ProjectDependencies\System.dll"/>
+
+    <Reference Include="0Harmony" HintPath="$(EXILED_REFERENCES)\0Harmony.dll"/>
+    <Reference Include="CommandSystem.Core" HintPath="$(EXILED_REFERENCES)\CommandSystem.Core.dll"/>
+    <Reference Include="NorthwoodLib" HintPath="$(EXILED_REFERENCES)\NorthwoodLib.dll"/>
+    <Reference Include="PluginAPI" HintPath="$(EXILED_REFERENCES)\PluginAPI.dll"/>
+    <Reference Include="Pooling" HintPath="$(EXILED_REFERENCES)\Pooling.dll"/>
+    <Reference Include="UnityEngine" HintPath="$(EXILED_REFERENCES)\UnityEngine.dll" Private="false"/>
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll" Private="false"/>
+    <Reference Include="UnityEngine.ParticleSystemModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.ParticleSystemModule.dll" Private="false"/>
+    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="false"/>
+    <Reference Include="UnityEngine.AudioModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.AudioModule.dll" Private="false"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Visibility\VisibilityData.cs" />
@@ -181,12 +168,13 @@
       <Link>_ProjectDependencies\System.dll</Link>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+
 </Project>
