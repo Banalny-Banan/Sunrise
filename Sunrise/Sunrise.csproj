@@ -1,186 +1,173 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4ECDBB98-93A3-432D-AE0C-19EC463F6996}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sunrise</RootNamespace>
-    <AssemblyName>Sunrise</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <LangVersion>preview</LangVersion>
-    <Nullable>enable</Nullable>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{4ECDBB98-93A3-432D-AE0C-19EC463F6996}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>Sunrise</RootNamespace>
+        <AssemblyName>Sunrise</AssemblyName>
+        <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PostBuildEvent>
             copy /y "$(SolutionDir)$(AssemblyName)\$(OutputPath)$(AssemblyName).dll" "$(AppData)\EXILED\Plugins\$(AssemblyName).dll"
         </PostBuildEvent>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\ExMod-9.0.0\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandSystem.Core">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\CommandSystem.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.CreditTags">
-      <HintPath>..\_ProjectDependencies\Exiled.CreditTags.dll</HintPath>
-    </Reference>
-    <Reference Include="NorthwoodLib">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="PluginAPI">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\PluginAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="Pooling">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\Pooling.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Exiled.API" HintPath="..\_ProjectDependencies\Exiled.API.dll" />
-    <Reference Include="Exiled.Events" HintPath="..\_ProjectDependencies\Exiled.Events.dll" />
-    <Reference Include="Exiled.Loader" HintPath="..\_ProjectDependencies\Exiled.Loader.dll" />
-    <Reference Include="Exiled.Permissions" HintPath="..\_ProjectDependencies\Exiled.Permissions.dll" />
-    <Reference Include="mscorlib" HintPath="..\_ProjectDependencies\mscorlib.dll" />
-    <Reference Include="Assembly-CSharp" HintPath="..\_ProjectDependencies\Assembly-CSharp-Publicized.dll" />
-    <Reference Include="Assembly-CSharp-firstpass" HintPath="..\_ProjectDependencies\Assembly-CSharp-firstpass.dll" />
-    <Reference Include="Mirror" HintPath="..\_ProjectDependencies\Mirror-Publicized.dll" />
-    <Reference Include="System" HintPath="..\_ProjectDependencies\System.dll" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\..\OneDrive\Рабочий стол\Important\SCPSL-DLLs\SCP Secret Laboratory-14.0.0\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="EntryPoint\SunriseLoader.cs" />
-    <Compile Include="Features\AntiWallhack\FpcVisibilityControllerIgnoredFlagsPatch.cs" />
-    <Compile Include="Features\DoorInteractionValidation\DoorInteractionValidationModule.cs" />
-    <Compile Include="Features\AntiWallhack\AntiWallhackModule.cs" />
-    <Compile Include="Features\AntiWallhack\RoomVisibilityData.cs" />
-    <Compile Include="Features\PickupEspClutter\PhantomPickup.cs" />
-    <Compile Include="Features\PickupEspClutter\PhantomPickupSpawner.cs" />
-    <Compile Include="Features\PickupEspClutter\PhantomPickupsModule.cs" />
-    <Compile Include="Features\PickupValidation\PickUpSearch.cs" />
-    <Compile Include="Features\PickupValidation\PickupValidationModule.cs" />
-    <Compile Include="Features\CommonPatches\Scp939LungePatch.cs" />
-    <Compile Include="Features\PickupValidation\PickupValidator.cs" />
-    <Compile Include="Features\ServersideBacktrack\EntryMatchFlags.cs" />
-    <Compile Include="Features\AntiWallhack\FpcVisibilityControllerPatch.cs" />
-    <Compile Include="Features\ServersideBacktrack\FpcMouseLookPatch.cs" />
-    <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaDamageModule.cs" />
-    <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaHitreg.cs" />
-    <Compile Include="Utility\Colors.cs" />
-    <Compile Include="Utility\Debug.cs" />
-    <Compile Include="Utility\Layers.cs" />
-    <Compile Include="Utility\MathExtensions.cs" />
-    <Compile Include="Utility\PlayerExtensions.cs" />
-    <Compile Include="Utility\PluginModule.cs" />
-    <Compile Include="EntryPoint\Config.cs" />
-    <Compile Include="EntryPoint\SunrisePlugin.cs" />
-    <Compile Include="Features\ServersideBacktrack\BacktrackEntry.cs" />
-    <Compile Include="Features\ServersideBacktrack\BacktrackHistory.cs" />
-    <Compile Include="Features\ServersideBacktrack\BacktrackProcessor.cs" />
-    <Compile Include="Features\ServersideBacktrack\ServersideBacktrackModule.cs" />
-    <Compile Include="Features\ServersideBacktrack\ShotBacktrackDataPatch.cs" />
-    <Compile Include="GlobalUsings.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\CircularBuffer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\CONTRIBUTING.md">
-      <Link>CONTRIBUTING.md</Link>
-    </Content>
-    <Content Include="..\LICENSE">
-      <Link>LICENSE</Link>
-    </Content>
-    <Content Include="..\README.md">
-      <Link>README.md</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Assembly-CSharp-firstpass.dll">
-      <Link>_ProjectDependencies\Assembly-CSharp-firstpass.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Assembly-CSharp-Publicized.dll">
-      <Link>_ProjectDependencies\Assembly-CSharp-Publicized.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.API.dll">
-      <Link>_ProjectDependencies\Exiled.API.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.API.xml">
-      <Link>_ProjectDependencies\Exiled.API.xml</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.CreditTags.dll">
-      <Link>_ProjectDependencies\Exiled.CreditTags.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.CreditTags.xml">
-      <Link>_ProjectDependencies\Exiled.CreditTags.xml</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.Events.dll">
-      <Link>_ProjectDependencies\Exiled.Events.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.Events.xml">
-      <Link>_ProjectDependencies\Exiled.Events.xml</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.Loader.dll">
-      <Link>_ProjectDependencies\Exiled.Loader.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.Loader.xml">
-      <Link>_ProjectDependencies\Exiled.Loader.xml</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.Permissions.dll">
-      <Link>_ProjectDependencies\Exiled.Permissions.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Exiled.Permissions.xml">
-      <Link>_ProjectDependencies\Exiled.Permissions.xml</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\Mirror-Publicized.dll">
-      <Link>_ProjectDependencies\Mirror-Publicized.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\mscorlib.dll">
-      <Link>_ProjectDependencies\mscorlib.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\System.Core.dll">
-      <Link>_ProjectDependencies\System.Core.dll</Link>
-    </Content>
-    <Content Include="..\_ProjectDependencies\System.dll">
-      <Link>_ProjectDependencies\System.dll</Link>
-    </Content>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Exiled.CreditTags">
+          <HintPath>..\_ProjectDependencies\Exiled.CreditTags.dll</HintPath>
+        </Reference>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="Exiled.API" HintPath="..\_ProjectDependencies\Exiled.API.dll"/>
+        <Reference Include="Exiled.Events" HintPath="..\_ProjectDependencies\Exiled.Events.dll"/>
+        <Reference Include="Exiled.Loader" HintPath="..\_ProjectDependencies\Exiled.Loader.dll"/>
+        <Reference Include="Exiled.Permissions" HintPath="..\_ProjectDependencies\Exiled.Permissions.dll"/>
+        <Reference Include="mscorlib" HintPath="..\_ProjectDependencies\mscorlib.dll"/>
+        <Reference Include="Assembly-CSharp" HintPath="..\_ProjectDependencies\Assembly-CSharp-Publicized.dll"/>
+        <Reference Include="Assembly-CSharp-firstpass" HintPath="..\_ProjectDependencies\Assembly-CSharp-firstpass.dll"/>
+        <Reference Include="Mirror" HintPath="..\_ProjectDependencies\Mirror-Publicized.dll"/>
+        <Reference Include="System" HintPath="..\_ProjectDependencies\System.dll"/>
+
+        <Reference Include="0Harmony" HintPath="$(EXILED_REFERENCES)\0Harmony.dll"/>
+        <Reference Include="CommandSystem.Core" HintPath="$(EXILED_REFERENCES)\CommandSystem.Core.dll"/>
+        <Reference Include="NorthwoodLib" HintPath="$(EXILED_REFERENCES)\NorthwoodLib.dll"/>
+        <Reference Include="PluginAPI" HintPath="$(EXILED_REFERENCES)\PluginAPI.dll"/>
+        <Reference Include="Pooling" HintPath="$(EXILED_REFERENCES)\Pooling.dll"/>
+        <Reference Include="UnityEngine" HintPath="$(EXILED_REFERENCES)\UnityEngine.dll" Private="false"/>
+        <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll" Private="false"/>
+        <Reference Include="UnityEngine.ParticleSystemModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.ParticleSystemModule.dll" Private="false"/>
+        <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="false"/>
+        <Reference Include="UnityEngine.AudioModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.AudioModule.dll" Private="false"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="EntryPoint\SunriseLoader.cs"/>
+        <Compile Include="Features\AntiWallhack\FpcVisibilityControllerIgnoredFlagsPatch.cs"/>
+        <Compile Include="Features\DoorInteractionValidation\DoorInteractionValidationModule.cs"/>
+        <Compile Include="Features\AntiWallhack\AntiWallhackModule.cs"/>
+        <Compile Include="Features\AntiWallhack\RoomVisibilityData.cs"/>
+        <Compile Include="Features\PickupEspClutter\PhantomPickup.cs"/>
+        <Compile Include="Features\PickupEspClutter\PhantomPickupSpawner.cs"/>
+        <Compile Include="Features\PickupEspClutter\PhantomPickupsModule.cs"/>
+        <Compile Include="Features\PickupValidation\PickupValidationModule.cs"/>
+        <Compile Include="Features\CommonPatches\Scp939LungePatch.cs"/>
+        <Compile Include="Features\PickupValidation\PickupValidator.cs"/>
+        <Compile Include="Features\ServersideBacktrack\EntryMatchFlags.cs"/>
+        <Compile Include="Features\AntiWallhack\FpcVisibilityControllerPatch.cs"/>
+        <Compile Include="Features\ServersideBacktrack\FpcMouseLookPatch.cs"/>
+        <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaDamageModule.cs"/>
+        <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaHitreg.cs"/>
+        <Compile Include="Utility\Colors.cs"/>
+        <Compile Include="Utility\Debug.cs"/>
+        <Compile Include="Utility\Layers.cs"/>
+        <Compile Include="Utility\MathExtensions.cs"/>
+        <Compile Include="Utility\PlayerExtensions.cs"/>
+        <Compile Include="Utility\PluginModule.cs"/>
+        <Compile Include="EntryPoint\Config.cs"/>
+        <Compile Include="EntryPoint\SunrisePlugin.cs"/>
+        <Compile Include="Features\ServersideBacktrack\BacktrackEntry.cs"/>
+        <Compile Include="Features\ServersideBacktrack\BacktrackHistory.cs"/>
+        <Compile Include="Features\ServersideBacktrack\BacktrackProcessor.cs"/>
+        <Compile Include="Features\ServersideBacktrack\ServersideBacktrackModule.cs"/>
+        <Compile Include="Features\ServersideBacktrack\ShotBacktrackDataPatch.cs"/>
+        <Compile Include="GlobalUsings.cs"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="Utility\CircularBuffer.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="..\CONTRIBUTING.md">
+            <Link>CONTRIBUTING.md</Link>
+        </Content>
+        <Content Include="..\LICENSE">
+            <Link>LICENSE</Link>
+        </Content>
+        <Content Include="..\README.md">
+            <Link>README.md</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Assembly-CSharp-firstpass.dll">
+          <Link>_ProjectDependencies\Assembly-CSharp-firstpass.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Assembly-CSharp-Publicized.dll">
+          <Link>_ProjectDependencies\Assembly-CSharp-Publicized.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.API.dll">
+          <Link>_ProjectDependencies\Exiled.API.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.API.xml">
+          <Link>_ProjectDependencies\Exiled.API.xml</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.CreditTags.dll">
+          <Link>_ProjectDependencies\Exiled.CreditTags.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.CreditTags.xml">
+          <Link>_ProjectDependencies\Exiled.CreditTags.xml</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.Events.dll">
+          <Link>_ProjectDependencies\Exiled.Events.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.Events.xml">
+          <Link>_ProjectDependencies\Exiled.Events.xml</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.Loader.dll">
+          <Link>_ProjectDependencies\Exiled.Loader.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.Loader.xml">
+          <Link>_ProjectDependencies\Exiled.Loader.xml</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.Permissions.dll">
+          <Link>_ProjectDependencies\Exiled.Permissions.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Exiled.Permissions.xml">
+          <Link>_ProjectDependencies\Exiled.Permissions.xml</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\Mirror-Publicized.dll">
+          <Link>_ProjectDependencies\Mirror-Publicized.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\mscorlib.dll">
+          <Link>_ProjectDependencies\mscorlib.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\System.Core.dll">
+          <Link>_ProjectDependencies\System.Core.dll</Link>
+        </Content>
+        <Content Include="..\_ProjectDependencies\System.dll">
+          <Link>_ProjectDependencies\System.dll</Link>
+        </Content>
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
     </Target>
     -->
+
 </Project>
