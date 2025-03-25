@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
 using Exiled.API.Features.Pickups;
 using HarmonyLib;
 using InventorySystem.Searching;
@@ -20,9 +21,12 @@ internal class StartingPickUpSearch
         int retIndex = newInstructions.FindIndex(x => x.opcode == OpCodes.Ret);
         newInstructions[retIndex].labels.Add(ret);
 
+        int offset = 1;
+        int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Isinst && x.operand is Type type && type == typeof(InventorySystem.Items.ICustomSearchCompletorItem)) + offset;
+
         LocalBuilder ev = generator.DeclareLocal(typeof(PickUpSearchEventArgs));
 
-        newInstructions.InsertRange(14, 
+        newInstructions.InsertRange(index, 
         [
             new(OpCodes.Ldarg_0), // referenceHub
             new(OpCodes.Call, Method(typeof(Player), nameof(Player.Get), [typeof(ReferenceHub)])), // var player = Player.Get(ReferenceHub)
