@@ -22,7 +22,7 @@ internal class StartingPickUpSearch
         int retIndex = newInstructions.FindIndex(x => x.opcode == OpCodes.Ret);
         newInstructions[retIndex].labels.Add(ret);
 
-        int offset = 1;
+        const int offset = 1;
         int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Isinst && x.operand is Type type && type == typeof(InventorySystem.Items.ICustomSearchCompletorItem)) + offset;
 
         newInstructions.InsertRange(index, 
@@ -32,9 +32,8 @@ internal class StartingPickUpSearch
 
             new(OpCodes.Ldarg_1), // itemPickupBase
 
-            new(OpCodes.Call, Method(typeof(StartingPickUpSearch), nameof(OnSearchingPickUp))), // StartingPickUpSearch.OnSearchingPickUp(ev)
-
-            new(OpCodes.Brfalse_S, ret), // if (!ev.IsAllowed) return;
+            new(OpCodes.Call, Method(typeof(PickupValidator), nameof(PickupValidator.ValidateSearchStart))),
+            new(OpCodes.Brfalse_S, ret),
         ]);
 
         foreach (CodeInstruction instruction in newInstructions)
@@ -43,7 +42,7 @@ internal class StartingPickUpSearch
         ListPool<CodeInstruction>.Shared.Return(newInstructions);
     }
 
-    public static bool OnSearchingPickUp(Player player, ItemPickupBase itemPickupBase)
+    /*public static bool OnSearchingPickUp(Player player, ItemPickupBase itemPickupBase)
     {
         if (!Config.Instance.PickupValidation)
             return true;
@@ -68,5 +67,5 @@ internal class StartingPickUpSearch
     {
         Vector3 forward = backtrack.Rotation * Vector3.forward;
         return Physics.Raycast(new Ray(cameraPosition + forward * 0.3f, forward), out raycastHit, 5, (1 << 0) | (1 << 9) | (1 << 14) | (1 << 27));
-    }
+    }*/
 }
