@@ -84,6 +84,9 @@ Sunrise adds a field-of-view (FOV) check to ensure that the player is looking at
 ## 🩹 Common Exploit Patches
 
 - SCP-939 lunge exploit: Prevents the exploit that allows SCP-939 to speed-hack using the lunge ability.
+- SCP-3114 Item use exploit: Prevents the exploit that allows SCP-3114 to use items, including firearms.
+- SCP-3114 Cooldown exploit: Prevents the exploit that allows cheaters to ignore the cooldowns of SCP-3114 disguise and strangle abilities.
+- Handcuffed inventory exploit: Prevents the exploit that allows cheaters to use inventory while handcuffed.
 
 ## 🗺️ Planned Features
 
