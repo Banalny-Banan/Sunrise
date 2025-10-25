@@ -4,7 +4,7 @@ SCP:SL anti-cheat that actually works.
 
 Designed to prevent common exploits and add server authority in places where it lacks.
 
-**Defeated cheats:** Silent aim, Spinbot, Wallhack (partially), Item pickup through walls, Tesla Gate bypass, SCP-939 lunge exploit, Door Manipulator.
+**Defeated cheats:** Silent aim, Spinbot, Wallhack (partially), Item pickup through walls, Tesla Gate bypass, Door Manipulator, and [many smaller exploits](#-common-exploit-patches).
 
 ---
 
