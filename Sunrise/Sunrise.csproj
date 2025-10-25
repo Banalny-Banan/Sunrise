@@ -92,7 +92,6 @@
         <Compile Include="Features\AntiWallhack\RaycastVisibilityChecker.cs" />
         <Compile Include="Features\ExploitPatches\DisarmedItemUseExploitPatchModule.cs" />
         <Compile Include="Features\ExploitPatches\ExploitPatchesLoader.cs" />
-        <Compile Include="Features\ExploitPatches\RceExploitPatch.cs" />
         <Compile Include="Features\DoorInteractionValidation\DoorInteractionValidationModule.cs" />
         <Compile Include="Features\ExploitPatches\Scp3114CooldownsExploitPatchModule.cs" />
         <Compile Include="Features\ExploitPatches\Scp3114ItemUseExploitPatchModule.cs" />
