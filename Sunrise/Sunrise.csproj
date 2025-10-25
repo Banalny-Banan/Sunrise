@@ -64,7 +64,6 @@
 
         <Reference Include="CommandSystem.Core" HintPath="$(EXILED_REFERENCES)\CommandSystem.Core.dll"/>
         <Reference Include="NorthwoodLib" HintPath="$(EXILED_REFERENCES)\NorthwoodLib.dll"/>
-        <Reference Include="PluginAPI" HintPath="$(EXILED_REFERENCES)\PluginAPI.dll"/>
         <Reference Include="Pooling" HintPath="$(EXILED_REFERENCES)\Pooling.dll"/>
         <Reference Include="UnityEngine" HintPath="$(EXILED_REFERENCES)\UnityEngine.dll" Private="false"/>
         <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll" Private="false"/>
@@ -91,14 +90,18 @@
         <Compile Include="Features\AntiWallhack\ForcedVisibility\ForcedVisibilityHelper.cs" />
         <Compile Include="Features\AntiWallhack\ForcedVisibility\ItemVisibilityHelper.cs" />
         <Compile Include="Features\AntiWallhack\RaycastVisibilityChecker.cs" />
-        <Compile Include="Features\CommonPatches\RceExploitPatch.cs" />
+        <Compile Include="Features\ExploitPatches\DisarmedItemUseExploitPatchModule.cs" />
+        <Compile Include="Features\ExploitPatches\ExploitPatchesLoader.cs" />
+        <Compile Include="Features\ExploitPatches\RceExploitPatch.cs" />
         <Compile Include="Features\DoorInteractionValidation\DoorInteractionValidationModule.cs" />
+        <Compile Include="Features\ExploitPatches\Scp3114CooldownsExploitPatchModule.cs" />
+        <Compile Include="Features\ExploitPatches\Scp3114ItemUseExploitPatchModule.cs" />
         <Compile Include="Features\PickupEspClutter\PhantomPickup.cs" />
         <Compile Include="Features\PickupEspClutter\PhantomPickupSpawner.cs" />
         <Compile Include="Features\PickupEspClutter\PhantomPickupsModule.cs" />
         <Compile Include="Features\PickupEspClutter\PhantomPickupSynchronizer.cs" />
         <Compile Include="Features\PickupValidation\PickupValidationModule.cs" />
-        <Compile Include="Features\CommonPatches\Scp939LungePatch.cs" />
+        <Compile Include="Features\ExploitPatches\Scp939LungePatch.cs" />
         <Compile Include="Features\PickupValidation\PickupValidator.cs" />
         <Compile Include="Features\AntiWallhack\FpcVisibilityControllerPatch.cs" />
         <Compile Include="Features\ServersideTeslaDamage\ServersideTeslaDamageModule.cs" />
