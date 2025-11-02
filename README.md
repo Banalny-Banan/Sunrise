@@ -2,9 +2,9 @@
 
 SCP:SL anti-cheat that actually works.
 
-Designed to prevent common exploits and add server authority in places where it lacks.
+Created to prevent common exploits and add server authority in places where it lacks.
 
-**Defeated cheats:** Silent aim, Spinbot, Wallhack (partially), Item pickup through walls, Tesla Gate bypass, SCP-939 lunge exploit, Door Manipulator.
+**Defeated cheats:** Silent aim, Spinbot, Wallhack (partially), Item pickup through walls, Tesla Gate bypass, Door Manipulator, and [many smaller exploits](#-common-exploit-patches).
 
 ---
 
@@ -84,6 +84,9 @@ Sunrise adds a field-of-view (FOV) check to ensure that the player is looking at
 ## 🩹 Common Exploit Patches
 
 - SCP-939 lunge exploit: Prevents the exploit that allows SCP-939 to speed-hack using the lunge ability.
+- SCP-3114 Item use exploit: Prevents the exploit that allows SCP-3114 to use items, including firearms.
+- SCP-3114 Cooldown exploit: Prevents the exploit that allows cheaters to ignore the cooldowns of SCP-3114 disguise and strangle abilities.
+- Handcuffed inventory exploit: Prevents the exploit that allows cheaters to use inventory while handcuffed.
 
 ## 🗺️ Planned Features
 
