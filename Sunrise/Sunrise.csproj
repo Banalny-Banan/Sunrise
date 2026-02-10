@@ -93,7 +93,6 @@
         <Compile Include="Features\ExploitPatches\DisarmedItemUseExploitPatchModule.cs" />
         <Compile Include="Features\ExploitPatches\ExploitPatchesLoader.cs" />
         <Compile Include="Features\DoorInteractionValidation\DoorInteractionValidationModule.cs" />
-        <Compile Include="Features\ExploitPatches\Scp3114CooldownsExploitPatchModule.cs" />
         <Compile Include="Features\ExploitPatches\Scp3114ItemUseExploitPatchModule.cs" />
         <Compile Include="Features\PickupEspClutter\PhantomPickup.cs" />
         <Compile Include="Features\PickupEspClutter\PhantomPickupSpawner.cs" />
