@@ -18,7 +18,7 @@ internal class DetectionHandler : PluginModule
 
     static void OnLeft(PlayerLeftEventArgs ev) => ReportCoolDown.Remove(ev.Player);
 
-    internal static void Handle(Player player, string detection, string details, ActionType action = ActionType.None)
+    internal static void Handle(Player player, string detection, string details, ActionType action)
     {
         if (ReportCoolDown.TryGetValue(player, out float nextReport) && Time.time < nextReport)
             return;
@@ -29,15 +29,12 @@ internal class DetectionHandler : PluginModule
         string report = $"{reason}\nPlayer [{player.PlayerId}] {player.Nickname} ({player.UserId})\n{details}";
 
         Log.Warn(report);
-
+        
         if (!string.IsNullOrWhiteSpace(Config.Instance.DetectWebhook))
             _ = SendWebhook(Config.Instance.DetectWebhook, report);
 
         if (Config.Instance.DetectReport)
-            CheaterReport.SubmitReport("SERVER", player.UserId, $"{reason}\n{details}", player.NetworkId, "Sunrise", player.Nickname, false);
-
-        if (action == ActionType.None)
-            action = Config.Instance.DetectAction;
+            SendReport(player, $"{reason}\n{details}");
 
         switch (action)
         {
@@ -65,6 +62,21 @@ internal class DetectionHandler : PluginModule
 
                 break;
         }
+    }
+
+    static void SendReport(Player player, string reason)
+    {
+        if (Server.Host is not Player host)
+            return;
+
+        PlayerReportingCheaterEventArgs ev = new(host.ReferenceHub, player.ReferenceHub, reason);
+        Handlers.PlayerEvents.OnReportingCheater(ev);
+
+        if (!ev.IsAllowed)
+            return;
+
+        host.ReferenceHub.GetComponent<CheaterReport>().SendStaffChatNotification(host.UserId, player.UserId, ev.Reason, "Sunrise Anti-Cheat", player.Nickname);
+        Handlers.PlayerEvents.OnReportedCheater(new PlayerReportedCheaterEventArgs(host.ReferenceHub, player.ReferenceHub, ev.Reason));
     }
 
     static async Task SendWebhook(string webhook, string report)

@@ -1,5 +1,6 @@
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Features.Wrappers;
+using Mirror.LiteNetLib4Mirror;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
 using Sunrise.API.Detections;
@@ -48,20 +49,20 @@ internal class AntiBigStepModule : PluginModule
         data.IgnoreUntil = Time.time + 0.5f;
     }
 
-    internal static void OnMovement(ReferenceHub hub, FpcSyncData sync)
+    internal static bool OnMovement(ReferenceHub hub, FpcSyncData sync)
     {
         if (!sync._bitPosition)
-            return;
+            return true;
 
         if (hub.roleManager.CurrentRole is not IFpcRole role || !role.FpcModule.ModuleReady)
-            return;
+            return true;
 
         FirstPersonMovementModule module = role.FpcModule;
 
         if (hub.roleManager.CurrentRole.ActiveTime < 3f || module.Noclip.IsActive || module.Noclip.RecentlyActive)
         {
             Players.Remove(hub);
-            return;
+            return true;
         }
 
         if (!Players.TryGetValue(hub, out MovementData data))
@@ -72,45 +73,64 @@ internal class AntiBigStepModule : PluginModule
         float now = Time.time;
         float rise = position.y - data.Position.y;
         float elapsed = now - data.Time;
+        bool hasPrevious = data.HasPosition && data.Waypoint == sync._position.WaypointId;
 
         data.Position = position;
         data.Time = now;
         data.Waypoint = sync._position.WaypointId;
         data.HasPosition = true;
 
-        if (!(data.HasPosition && data.Waypoint == sync._position.WaypointId) || now < data.IgnoreUntil || now < data.NextWarning)
-            return;
+        if (!hasPrevious || now < data.IgnoreUntil)
+            return true;
 
         float upwardSpeed = Mathf.Max(module.JumpSpeed * module.Motor.JumpController.JumpMultiplier, module.Motor.MoveDirection.y);
         float serverDifference = position.y - module.Position.y;
 
         if (!IsSuspicious(rise, elapsed, upwardSpeed, serverDifference))
-            return;
+            return true;
 
         foreach (Elevator elevator in Elevator.List)
         {
             Bounds bounds = elevator.WorldSpaceRelativeBounds.Bounds;
 
             if (bounds.Contains(module.Position) || bounds.Contains(position))
-                return;
+                return true;
         }
-
-        data.NextWarning = now + 1f;
 
         Player player = Player.Get(hub);
 
-        string details = $"Room: {player.Room?.Name ?? MapGeneration.RoomName.Unnamed} {player.Room?.Transform.InverseTransformPoint(player.Position) ?? Vector3.zero}\nrise: {rise:F2}, interval: {elapsed:F3}s, server difference: {serverDifference:F2}, step offset: {module.CharController.stepOffset:F2}.";
+        Room.TryGetRoomAtPosition(module.Position, out Room? oldPosRoom);
+        Room.TryGetRoomAtPosition(position, out Room? newPosRoom);
 
-        if (serverDifference > 1f)
+        int ping = LiteNetLib4MirrorServer.GetPing(player.Connection.connectionId) * 2;
+
+        string details = $"Old position: {module.Position} Room: {oldPosRoom?.Name ?? MapGeneration.RoomName.Unnamed} {oldPosRoom?.Transform.InverseTransformPoint(module.Position) ?? Vector3.zero}\nNew position: {position} Room: {newPosRoom?.Name ?? MapGeneration.RoomName.Unnamed} {newPosRoom?.Transform.InverseTransformPoint(position) ?? Vector3.zero}\nrise: {rise:F2}, interval: {elapsed:F3}s, server difference: {serverDifference:F2}, step offset: {module.CharController.stepOffset:F3}, ping {ping}.";
+
+        if (serverDifference > 1f && module.CharController.stepOffset > 0.225f && ping < 200)
         {
-            DetectionHandler.Handle(player, "BigStep", details);
+            DetectionHandler.Handle(player, "BigStep", details, Config.Instance.DetectAction);
         }
         else
         {
-            player.Position = data.Position;
+            DetectionHandler.Handle(player, "Possible BigStep", details, ActionType.None);
 
-            Log.Warn($"[AntiBigStep] Possible BigStep detected: Player {player.Nickname} ({player.UserId})\n{details}");
+            Vector3 serverPosition = module.Position;
+            player.Position = serverPosition;
+
+            data.Position = serverPosition;
+            data.HasPosition = true;
+            data.IgnoreUntil = 0f;
+
+            if (now >= data.NextWarning)
+            {
+                data.NextWarning = now + 1f;
+                Log.Warn($"[AntiBigStep] Possible BigStep detected: Player {player.Nickname} ({player.UserId})\n{details}");
+            }
+
+            return false;
         }
+
+        return true;
     }
 
     internal static bool IsSuspicious(float rise, float elapsed, float upwardSpeed, float serverDifference)

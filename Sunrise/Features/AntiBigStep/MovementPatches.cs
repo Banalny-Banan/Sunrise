@@ -8,13 +8,13 @@ namespace Sunrise.Features.AntiBigStep;
 [HarmonyPatch(typeof(FpcFromClientMessage), nameof(FpcFromClientMessage.ProcessMessage))]
 internal static class FpcFromClientMessagePatch
 {
-    static void Prefix(FpcFromClientMessage __instance, NetworkConnection sender)
+    static bool Prefix(FpcFromClientMessage __instance, NetworkConnection sender)
     {
         if (sender.identity == null || sender.identity.isLocalPlayer)
-            return;
+            return true;
 
-        if (ReferenceHub.TryGetHubNetID(sender.identity.netId, out ReferenceHub hub))
-            AntiBigStepModule.OnMovement(hub, __instance._data);
+        return !ReferenceHub.TryGetHubNetID(sender.identity.netId, out ReferenceHub hub)
+            || AntiBigStepModule.OnMovement(hub, __instance._data);
     }
 }
 
