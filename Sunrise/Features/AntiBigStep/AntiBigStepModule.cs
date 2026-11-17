@@ -28,9 +28,6 @@ internal class AntiBigStepModule : PluginModule
 
     protected override void OnDisabled()
     {
-        if (!Config.Instance.AntiBigStep)
-            return;
-
         Handlers.PlayerEvents.ChangedRole -= OnChangedRole;
         Handlers.PlayerEvents.Left -= OnLeft;
     }

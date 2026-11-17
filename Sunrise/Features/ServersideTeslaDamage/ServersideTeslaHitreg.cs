@@ -13,7 +13,7 @@ internal class ServersideTeslaHitreg(TeslaGate tesla)
 
     readonly Bounds _bounds = new(tesla.transform.position + Vector3.up * (tesla.sizeOfKiller.y / 2f), (tesla.transform.rotation * new Vector3(4f, 0.7f, 5f)).Abs());
     readonly Collider[] _hitBuffer = new Collider[100];
-    readonly HashSet<Player> _hitPlayers = [];
+    readonly List<ReferenceHub> _hitPlayers = [];
 
     public void Burst() => Timing.RunCoroutine(BurstCoroutine(), CoroutineTag);
 
@@ -46,15 +46,17 @@ internal class ServersideTeslaHitreg(TeslaGate tesla)
         {
             Collider collider = _hitBuffer[i];
 
-            if (Player.Get(collider.gameObject) is Player player)
-                _hitPlayers.Add(player);
+            if (collider.transform.TryGetComponentInParent(out ReferenceHub hub) && !_hitPlayers.Contains(hub))
+                _hitPlayers.Add(hub);
         }
     }
 
     void ProcessHits()
     {
-        foreach (Player player in _hitPlayers)
+        foreach (ReferenceHub hub in _hitPlayers)
         {
+            Player player = Player.Get(hub);
+
             if (player.IsDestroyed)
                 continue;
 

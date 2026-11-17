@@ -22,6 +22,8 @@ internal class AntiWallhackModule : PluginModule
     internal static readonly Dictionary<Player, float> LandingTimes = [];
 
     static readonly Dictionary<Player, List<Player>> VisiblePlayers = [];
+
+    // After a player dies, the spectator camera remains at the player's last position until the spectator changes their target
     static readonly Dictionary<Player, Vector3> DeathPositions = [];
 
     static readonly AutoBenchmark Benchmark = new("Anti Wallhack (without raycasts)");

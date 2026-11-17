@@ -22,9 +22,6 @@ internal class AntiDoorManipulatorModule : PluginModule
 
     protected override void OnDisabled()
     {
-        if (!Config.Instance.DoorInteractionValidation)
-            return;
-
         Handlers.PlayerEvents.InteractingDoor -= OnInteractingDoor;
     }
 

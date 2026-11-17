@@ -25,9 +25,6 @@ internal class ServersideTeslaDamageModule : PluginModule
 
     protected override void OnDisabled()
     {
-        if (!Config.Instance.ServersideTeslaDamage)
-            return;
-
         TeslaGate.OnBursted -= OnTeslaGateBursted;
         Handlers.PlayerEvents.Hurt -= OnPlayerHurt;
     }
