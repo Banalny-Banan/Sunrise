@@ -1,8 +1,12 @@
 using HarmonyLib;
 using InventorySystem.Items;
 using LabApi.Events.Arguments.PlayerEvents;
+using LabApi.Features.Extensions;
 using LabApi.Features.Wrappers;
+using NorthwoodLib.Pools;
+using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
+using PlayerRoles.FirstPersonControl.NetworkMessages;
 using PlayerRoles.PlayableScps.Scp049;
 using PlayerRoles.PlayableScps.Scp096;
 using PlayerRoles.PlayableScps.Scp939;
@@ -18,6 +22,7 @@ internal class AntiWallhackModule : PluginModule
     internal static readonly Dictionary<Player, float> LandingTimes = [];
 
     static readonly Dictionary<Player, List<Player>> VisiblePlayers = [];
+    static readonly Dictionary<Player, Vector3> DeathPositions = [];
 
     static readonly AutoBenchmark Benchmark = new("Anti Wallhack (without raycasts)");
 
@@ -34,6 +39,12 @@ internal class AntiWallhackModule : PluginModule
         Handlers.PlayerEvents.ValidatedVisibility += OnValidatedVisibility;
         Handlers.PlayerEvents.Left += OnPlayerLeft;
         Handlers.PlayerEvents.ChangedRole += OnChangedRole;
+
+        if (Config.Instance.SpectatorAntiWallhack)
+        {
+            Handlers.PlayerEvents.ChangedSpectator += OnChangedSpectator;
+            Handlers.PlayerEvents.ChangingRole += OnChangingRole;
+        }
     }
 
     protected override void OnDisabled()
@@ -41,17 +52,21 @@ internal class AntiWallhackModule : PluginModule
         Handlers.PlayerEvents.ValidatedVisibility -= OnValidatedVisibility;
         Handlers.PlayerEvents.Left -= OnPlayerLeft;
         Handlers.PlayerEvents.ChangedRole -= OnChangedRole;
+        Handlers.PlayerEvents.ChangedSpectator -= OnChangedSpectator;
+        Handlers.PlayerEvents.ChangingRole -= OnChangingRole;
     }
 
     protected override void OnReset()
     {
         LandingTimes.Clear();
         VisiblePlayers.Clear();
+        DeathPositions.Clear();
         RaycastVisibilityCache.Clear();
     }
 
     static void OnPlayerLeft(PlayerLeftEventArgs ev)
     {
+        DeathPositions.Remove(ev.Player);
         LandingTimes.Remove(ev.Player);
         RemoveVisibility(ev.Player);
         RaycastVisibilityCache.Remove(ev.Player.PlayerId);
@@ -62,6 +77,39 @@ internal class AntiWallhackModule : PluginModule
         LandingTimes.Remove(ev.Player);
         RemoveVisibility(ev.Player);
         RaycastVisibilityCache.Remove(ev.Player.PlayerId);
+
+        if (ev.NewRole.RoleTypeId.IsAlive())
+            DeathPositions.Remove(ev.Player);
+    }
+
+    static void OnChangingRole(PlayerChangingRoleEventArgs ev)
+    {
+        if (!ev.IsAllowed || ev.OldRole.RoleTypeId.IsDead() || ev.NewRole.IsAlive())
+            return;
+
+        Vector3 position = ev.Player.Position;
+        DeathPositions[ev.Player] = position;
+
+        List<Player> spectators = ev.Player.CurrentSpectators;
+
+        foreach (Player spectator in spectators)
+            DeathPositions[spectator] = position;
+
+        ListPool<Player>.Shared.Return(spectators);
+    }
+
+    static void OnChangedSpectator(PlayerChangedSpectatorEventArgs ev)
+    {
+        if (!Config.Instance.SpectatorAntiWallhack || ev.Player.Role != RoleTypeId.Spectator || ev.NewTarget == ev.OldTarget)
+            return;
+
+        if (ev.NewTarget != null)
+        {
+            DeathPositions.Remove(ev.Player);
+            RaycastVisibilityCache.Remove(ev.Player.PlayerId);
+        }
+
+        ev.Player.Connection.Send(new FpcPositionMessage(ev.Player.ReferenceHub));
     }
 
     static void OnValidatedVisibility(PlayerValidatedVisibilityEventArgs ev)
@@ -69,8 +117,16 @@ internal class AntiWallhackModule : PluginModule
         if (ev.Player == ev.Target)
             return;
 
-        if (Config.Instance.SpectatorAntiWallhack && ev.Player.Role == PlayerRoles.RoleTypeId.Spectator)
+        if (Config.Instance.SpectatorAntiWallhack && ev.Player.Role == RoleTypeId.Spectator)
         {
+            if (DeathPositions.TryGetValue(ev.Player, out Vector3 position))
+            {
+                if ((position - ev.Target.Position).sqrMagnitude > 30f * 30f)
+                    ev.IsVisible = false;
+
+                return;
+            }
+
             Player? observer = ev.Player.CurrentlySpectating;
 
             if (observer == null || (observer != ev.Target && (!VisiblePlayers.TryGetValue(observer, out List<Player> visiblePlayers) || !visiblePlayers.Contains(ev.Target))))
@@ -95,7 +151,7 @@ internal class AntiWallhackModule : PluginModule
         {
             Benchmark.Start();
 
-            if (IsExceptionalCase(ev.Player, observerRole, ev.Target))
+            if (IsExceptionalCase(ev.Player, ev.Target))
                 return;
 
             float sqrDistance = (ev.Player.Position - ev.Target.Position).sqrMagnitude;
@@ -150,11 +206,8 @@ internal class AntiWallhackModule : PluginModule
             visiblePlayers.Remove(player);
     }
 
-    static bool IsExceptionalCase(Player observer, IFpcRole observerRole, Player target)
+    static bool IsExceptionalCase(Player observer, Player target)
     {
-        //if (observerRole.FpcModule.Noclip.IsActive)
-        //    return true;
-
         // Night vision scopes do not count as emitting light.
         if (target.CurrentItem is FirearmItem firearm)
         {

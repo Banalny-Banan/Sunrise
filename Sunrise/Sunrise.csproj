@@ -28,6 +28,9 @@
     <Reference Include="Mirror-Publicized">
       <HintPath>$(SL_REFERENCES)\Mirror-Publicized.dll</HintPath>
     </Reference>
+	<Reference Include="NorthwoodLib">
+		<HintPath>$(SL_REFERENCES)\NorthwoodLib.dll</HintPath>
+	</Reference>
     <Reference Include="Pooling">
       <HintPath>$(SL_REFERENCES)\Pooling.dll</HintPath>
     </Reference>
